@@ -2,51 +2,23 @@ $engine: 3
 $onesync: on
 $minFxVersion: 7290
 
-name: FluviaRP Framework
+name: FluviaRP
 version: 1.0.0
-author: FluviaRP
-description: "Framework RP custom - Création de personnage, menu admin, tablette admin, factions dynamiques."
+author: NobleMP4
 
 tasks:
-  # 1. Télécharger les fichiers de base (citizen, etc.)
-  - action: download_github
-    src: https://github.com/citizenfx/cfx-server-data
-    ref: master
-    dest: ./
-    timeoutSeconds: 300
-
-  # 2. Télécharger ton framework FluviaRP
   - action: download_github
     src: https://github.com/NobleMP4/FluviaRP
     ref: main
     dest: ./fluvia_tmp
-    timeoutSeconds: 300
 
-  # 3. Organiser les fichiers
   - action: move_path
     src: ./fluvia_tmp/resources
-    dest: ./resources/fluvia_framework
+    dest: ./resources
 
   - action: move_path
     src: ./fluvia_tmp/server.cfg
     dest: ./server.cfg
 
-  - action: move_path
-    src: ./fluvia_tmp/SQL
-    dest: ./SQL
-
-  # 4. Nettoyage
   - action: remove_path
     path: ./fluvia_tmp
-
-  # 5. Dépendance oxmysql
-  - action: download_github
-    src: https://github.com/overextended/oxmysql
-    ref: main
-    dest: ./resources/oxmysql
-
-  # 6. Base de données
-  - action: connect_database
-
-  - action: query_database
-    file: ./SQL/schema.sql
