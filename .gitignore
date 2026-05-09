@@ -1,0 +1,49 @@
+# ============================================================
+# FluviaRP - .gitignore
+# ============================================================
+
+# ---- Node / React ----
+node_modules/
+**/node_modules/
+
+# Builds React (à regénérer localement avec npm run build)
+# On commit le dist/ pour que txAdmin puisse l'utiliser directement
+# sans avoir besoin de Node.js sur le serveur.
+# Décommente les lignes suivantes si tu veux exclure les builds :
+# **/ui/dist/
+
+# Logs npm/yarn
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ---- FiveM / CitizenFX ----
+# Cache FXServer (généré au runtime, ne pas commiter)
+cache/
+*.cache
+
+# Fichiers de config locaux txAdmin (jamais commités)
+txData/
+*.txadmin.cfg
+
+# ---- Éditeurs ----
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ---- Environnement local ----
+.env
+.env.local
+.env.*.local
+
+# ---- Fichiers temporaires ----
+*.tmp
+*.log
+fluvia_tmp/
+
+.claude/
+nul

@@ -1,0 +1,117 @@
+# ============================================================
+# FluviaRP - txAdmin Recipe
+# ============================================================
+# Déploiement automatique depuis GitHub via txAdmin.
+# Remplace toutes les variables {{...}} automatiquement.
+#
+# Dépôt GitHub : https://github.com/NobleMP4/FluviaRP
+# ============================================================
+
+$engine: 3
+$onesync: on
+$minFxVersion: 7290
+
+name: FluviaRP Framework
+version: 1.0.0
+author: FluviaRP
+description: "Framework RP custom - Création de personnage, menu admin (SUPPR), tablette admin (F8), factions dynamiques."
+
+# ============================================================
+# TASKS - Exécutées dans l'ordre par txAdmin
+# ============================================================
+tasks:
+
+  # ----------------------------------------------------------
+  # 1. Télécharger les fichiers serveur de base de CitizenFX
+  #    (contient citizen/, .bin, etc. nécessaires au lancement)
+  # ----------------------------------------------------------
+  - action: download_github
+    src: citizenfx/cfx-server-data
+    ref: master
+    dest: ./
+    timeoutSeconds: 300
+
+  # ----------------------------------------------------------
+  # 2. Télécharger le framework FluviaRP depuis GitHub
+  #    Remplace NobleMP4 par ton nom d'utilisateur GitHub
+  # ----------------------------------------------------------
+  - action: download_github
+    src: NobleMP4/FluviaRP
+    ref: main
+    dest: ./fluvia_tmp
+    timeoutSeconds: 300
+
+  # Petite pause pour éviter le rate-limit GitHub
+  - action: waste_time
+    seconds: 2
+
+  # ----------------------------------------------------------
+  # 3. Copier le server.cfg depuis le repo
+  # ----------------------------------------------------------
+  - action: copy_path
+    src: ./fluvia_tmp/server.cfg
+    dest: ./server.cfg
+    overwrite: true
+
+  # ----------------------------------------------------------
+  # 4. Copier le dossier resources complet
+  # ----------------------------------------------------------
+  - action: copy_path
+    src: ./fluvia_tmp/resources
+    dest: ./resources
+    overwrite: true
+
+  # ----------------------------------------------------------
+  # 5. Copier le schéma SQL (pour référence, pas auto-importé
+  #    car on utilise query_database juste après)
+  # ----------------------------------------------------------
+  - action: copy_path
+    src: ./fluvia_tmp/SQL
+    dest: ./SQL
+    overwrite: true
+
+  # ----------------------------------------------------------
+  # 6. Nettoyer le dossier temporaire
+  # ----------------------------------------------------------
+  - action: remove_path
+    path: ./fluvia_tmp
+
+  # ----------------------------------------------------------
+  # 7. Télécharger oxmysql (dépendance externe)
+  # ----------------------------------------------------------
+  - action: download_github
+    src: overextended/oxmysql
+    ref: main
+    dest: ./resources/oxmysql
+    timeoutSeconds: 120
+
+  - action: waste_time
+    seconds: 2
+
+  # ----------------------------------------------------------
+  # 8. Connexion à la base de données et import du schéma
+  # ----------------------------------------------------------
+  - action: connect_database
+
+  - action: query_database
+    file: ./SQL/schema.sql
+
+  # ----------------------------------------------------------
+  # 9. Injecter les variables txAdmin dans server.cfg
+  #    (svLicense, maxClients, serverName, dbConnectionString,
+  #     addPrincipalsMaster sont injectées automatiquement)
+  #    Le server.cfg contient déjà les placeholders {{...}}
+  #    donc txAdmin les remplace lors du déploiement.
+  # ----------------------------------------------------------
+
+  # Injecter la connection string oxmysql correcte
+  # (txAdmin génère {{dbConnectionString}} au format mysql://...)
+  - action: replace_string
+    file: ./server.cfg
+    mode: template
+    search: "{{dbConnectionString}}"
+    replace: "{{dbConnectionString}}"
+
+  # ----------------------------------------------------------
+  # FIN - txAdmin vérifie que server.cfg et resources/ existent
+  # ----------------------------------------------------------
