@@ -6,37 +6,36 @@ local blips  = {}  -- blips de points de service actifs
 
 -- ── Toggle de la tablette ─────────────────────────────────────────────────────
 RegisterCommand('fluvia_tablet', function()
-    -- Seuls les admins peuvent ouvrir (vérification UI-side + rechargée au besoin)
-    ToggleTablet()
+    if isOpen then
+        CloseTablet()
+    else
+        TriggerServerEvent('fluvia:tablet:requestOpen')
+    end
 end, false)
 RegisterKeyMapping('fluvia_tablet', 'Ouvrir la tablette admin', 'keyboard', 'F8')
 
-function ToggleTablet()
-    isOpen = not isOpen
+-- Serveur autorise l'ouverture
+RegisterNetEvent('fluvia:tablet:allowOpen', function()
+    isOpen = true
+    SendNUIMessage({ action = 'open' })
+    SetNuiFocus(true, true)
+    FreezeEntityPosition(PlayerPedId(), true)
+    DisplayHud(false)
+    DisplayRadar(false)
+end)
 
-    if isOpen then
-        SendNUIMessage({ action = 'open' })
-        SetNuiFocus(true, true)        -- bloque mouvement ET clavier
-        FreezeEntityPosition(PlayerPedId(), true)
-        DisplayHud(false)
-        DisplayRadar(false)
-    else
-        SendNUIMessage({ action = 'close' })
-        SetNuiFocus(false, false)
-        FreezeEntityPosition(PlayerPedId(), false)
-        DisplayHud(true)
-        DisplayRadar(true)
-    end
-end
-
--- ── NUI : fermer la tablette ──────────────────────────────────────────────────
-RegisterNUICallback('closeTablet', function(data, cb)
+function CloseTablet()
     isOpen = false
+    SendNUIMessage({ action = 'close' })
     SetNuiFocus(false, false)
     FreezeEntityPosition(PlayerPedId(), false)
     DisplayHud(true)
     DisplayRadar(true)
-    SendNUIMessage({ action = 'close' })
+end
+
+-- ── NUI : fermer la tablette ──────────────────────────────────────────────────
+RegisterNUICallback('closeTablet', function(data, cb)
+    CloseTablet()
     cb({ ok = true })
 end)
 

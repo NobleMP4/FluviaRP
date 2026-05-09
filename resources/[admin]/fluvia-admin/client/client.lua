@@ -6,28 +6,31 @@ local isGodMode  = false
 
 -- ── Toggle du menu ────────────────────────────────────────────────────────────
 RegisterCommand('fluvia_admin_menu', function()
-    ToggleMenu()
+    if isMenuOpen then
+        CloseMenu()
+    else
+        TriggerServerEvent('fluvia:admin:requestOpen')
+    end
 end, false)
 RegisterKeyMapping('fluvia_admin_menu', 'Ouvrir le menu admin', 'keyboard', 'DELETE')
 
-function ToggleMenu()
-    isMenuOpen = not isMenuOpen
+-- Serveur autorise l'ouverture
+RegisterNetEvent('fluvia:admin:allowOpen', function()
+    isMenuOpen = true
+    SendNUIMessage({ action = 'open' })
+    SetNuiFocus(true, true)
+    TriggerServerEvent('fluvia:admin:requestPlayerList')
+end)
 
-    if isMenuOpen then
-        SendNUIMessage({ action = 'open' })
-        SetNuiFocus(true, true)
-        TriggerServerEvent('fluvia:admin:requestPlayerList')
-    else
-        SendNUIMessage({ action = 'close' })
-        SetNuiFocus(false, false)
-    end
+function CloseMenu()
+    isMenuOpen = false
+    SendNUIMessage({ action = 'close' })
+    SetNuiFocus(false, false)
 end
 
 -- ── NUI : fermer le menu ──────────────────────────────────────────────────────
 RegisterNUICallback('closeMenu', function(data, cb)
-    isMenuOpen = false
-    SendNUIMessage({ action = 'close' })
-    SetNuiFocus(false, false)
+    CloseMenu()
     cb({ ok = true })
 end)
 
