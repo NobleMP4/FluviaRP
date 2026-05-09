@@ -14,15 +14,13 @@ end)
 
 -- ── Réception des slots → ouverture du NUI de sélection ─────────────────────
 RegisterNetEvent('fluvia:character:receiveSlots', function(slots)
-    exports.spawnmanager:setAutoSpawn(false)
-    exports.spawnmanager:spawnPlayer({ x = 0.0, y = 0.0, z = 72.0, model = 'mp_m_freemode_01' }, function()
-        SetNuiFocus(true, true)
-        FreezeEntityPosition(PlayerPedId(), true)
-        DisplayHud(false)
-        DisplayRadar(false)
-        OpenSelectionCamera()
-        SendNUIMessage({ action = 'openCharacterSelect', slots = slots, maxSlots = Config.MaxSlots })
-    end)
+    ShutdownLoadingScreen()
+    SetNuiFocus(true, true)
+    FreezeEntityPosition(PlayerPedId(), true)
+    DisplayHud(false)
+    DisplayRadar(false)
+    OpenSelectionCamera()
+    SendNUIMessage({ action = 'openCharacterSelect', slots = slots, maxSlots = Config.MaxSlots })
 end)
 
 -- ── NUI Callbacks ─────────────────────────────────────────────────────────────
