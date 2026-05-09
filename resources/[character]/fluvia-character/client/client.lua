@@ -105,12 +105,13 @@ end)
 -- ── Helpers ───────────────────────────────────────────────────────────────────
 
 function OpenSelectionCamera()
+    -- Caméra initiale (avant spawn du ped) — position quelconque, sera ré-attachée
     local cp = Config.CreatorCam
     camHandle = CreateCamWithParams(
         'DEFAULT_SCRIPTED_CAMERA',
         cp.pos.x, cp.pos.y, cp.pos.z,
-        cp.rot.x, cp.rot.y, cp.rot.z,
-        cp.fov, true, 0
+        0.0, 0.0, 0.0,
+        Config.CreatorCam.fov, true, 0
     )
     SetCamActive(camHandle, true)
     RenderScriptCams(true, false, 0, true, false)
@@ -146,8 +147,12 @@ function SpawnCreatorPed(gender)
     SetModelAsNoLongerNeeded(hash)
     SetPedDefaultComponentVariation(creationPed)
 
-    -- Pointer la caméra vers le visage du ped
+    -- Attacher la caméra au ped en espace local :
+    -- yOffset positif = devant le ped (dans la direction qu'il regarde)
+    -- zOffset = hauteur du visage
+    -- Puis PointCamAtEntity pour qu'elle regarde vers le ped → vue de face
     if camHandle then
+        AttachCamToEntity(camHandle, creationPed, 0.0, 2.5, 0.7, true)
         PointCamAtEntity(camHandle, creationPed, 0.0, 0.0, 0.65, true)
     end
 end
