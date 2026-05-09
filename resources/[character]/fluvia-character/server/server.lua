@@ -17,8 +17,13 @@ end
 -- ── Récupère les slots de personnage ─────────────────────────────────────────
 RegisterNetEvent('fluvia:character:fetchSlots', function()
     local src = source
+    print('[DEBUG] fetchSlots reçu de src=' .. tostring(src))
     local p   = exports['fluvia-core']:GetPlayer(src)
-    if not p then return end
+    print('[DEBUG] GetPlayer retourne: ' .. tostring(p))
+    if not p then
+        print('[DEBUG] ERREUR: joueur introuvable pour src=' .. tostring(src))
+        return
+    end
 
     local chars = MySQL.query.await(
         [[SELECT id, slot, first_name, last_name, dob, nationality, gender
@@ -28,6 +33,7 @@ RegisterNetEvent('fluvia:character:fetchSlots', function()
         { p.playerId }
     )
 
+    print('[DEBUG] Envoi receiveSlots à src=' .. tostring(src) .. ' slots=' .. tostring(#(chars or {})))
     TriggerClientEvent('fluvia:character:receiveSlots', src, chars or {})
 end)
 
