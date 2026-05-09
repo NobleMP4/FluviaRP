@@ -7,21 +7,25 @@ local isInCreator = false
 -- ── Démarrage : demande les slots après initialisation du core ───────────────
 AddEventHandler('onClientResourceStart', function(res)
     if res ~= GetCurrentResourceName() then return end
-    -- Attendre que le core ait enregistré le joueur
+    print('[DEBUG CLIENT] onClientResourceStart déclenché pour fluvia-character')
     Wait(2000)
+    print('[DEBUG CLIENT] Envoi fetchSlots au serveur')
     TriggerServerEvent('fluvia:character:fetchSlots')
 end)
 
 -- ── Réception des slots → ouverture du NUI de sélection ─────────────────────
 RegisterNetEvent('fluvia:character:receiveSlots', function(slots)
+    print('[DEBUG CLIENT] receiveSlots reçu, slots=' .. tostring(#slots))
+    print('[DEBUG CLIENT] Appel spawnPlayer...')
     exports.spawnmanager:spawnPlayer({
-        x       = -269.4,
-        y       = -955.3,
-        z       = 31.2,
-        heading = 0.0,
-        model   = GetHashKey('mp_m_freemode_01'),
+        x        = -269.4,
+        y        = -955.3,
+        z        = 31.2,
+        heading  = 0.0,
+        model    = GetHashKey('mp_m_freemode_01'),
         skipFade = true,
     }, function()
+        print('[DEBUG CLIENT] spawnPlayer callback OK, ouverture NUI')
         SetNuiFocus(true, true)
         FreezeEntityPosition(PlayerPedId(), true)
         DisplayHud(false)

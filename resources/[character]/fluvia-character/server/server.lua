@@ -164,6 +164,7 @@ end)
 
 -- ── Broadcast côté serveur : personnage chargé (pour les autres ressources) ──
 RegisterNetEvent('fluvia:characterLoaded', function(charData)
-    -- Transmet à toutes les ressources serveur via un event
-    TriggerEvent('fluvia:server:characterLoaded', source, charData)
+    local src = source
+    TriggerEvent('fluvia:server:characterLoaded', src, charData)
+    print('[FluviaRP Character] Personnage chargé pour src=' .. tostring(src))
 end)

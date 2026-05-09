@@ -6,6 +6,11 @@ description 'FluviaRP - Création et sélection de personnage'
 version     '1.0.0'
 author      'FluviaRP'
 
+dependencies {
+    'fluvia-core',
+    'spawnmanager',
+}
+
 shared_scripts {
     'shared/config.lua',
 }
