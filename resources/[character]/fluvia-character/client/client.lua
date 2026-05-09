@@ -26,7 +26,7 @@ end)
 
 -- Joueur sélectionne un personnage existant
 RegisterNUICallback('selectCharacter', function(data, cb)
-    TriggerNetEvent('fluvia:character:load', data.charId)
+    TriggerServerEvent('fluvia:character:load', data.charId)
     cb({ ok = true })
 end)
 
@@ -55,7 +55,7 @@ end)
 
 -- Confirmation de la création du personnage
 RegisterNUICallback('createCharacter', function(data, cb)
-    TriggerNetEvent('fluvia:character:create', data)
+    TriggerServerEvent('fluvia:character:create', data)
     cb({ ok = true })
 end)
 
@@ -73,7 +73,7 @@ end)
 -- ── Serveur → personnage créé avec succès → charger le personnage ─────────────
 RegisterNetEvent('fluvia:character:created', function(charId)
     -- Recharger les slots puis auto-sélectionner le nouveau
-    TriggerNetEvent('fluvia:character:load', charId)
+    TriggerServerEvent('fluvia:character:load', charId)
 end)
 
 -- ── Serveur → spawn du personnage ────────────────────────────────────────────
@@ -104,8 +104,7 @@ RegisterNetEvent('fluvia:character:spawn', function(charData)
 
     -- Informer les autres ressources (y compris le serveur)
     TriggerEvent('fluvia:characterLoaded', charData)
-    TriggerNetEvent('fluvia:characterLoaded', charData)
-    TriggerClientEvent('fluvia:notify', -1, nil, nil)  -- pas de notif globale
+    TriggerServerEvent('fluvia:characterLoaded', charData)
     TriggerEvent('fluvia:notify', 'success', 'Bienvenue ' .. charData.firstName .. ' ' .. charData.lastName .. ' !')
 end)
 

@@ -33,8 +33,8 @@ RegisterNetEvent('fluvia:tablet:createRole', function(data)
 
     if roleId then
         TriggerClientEvent('fluvia:notify', src, 'success', 'Rôle créé : ' .. data.label)
-        -- Rafraîchir la liste
-        TriggerNetEvent('fluvia:tablet:getRoles')
+        local roles = MySQL.query.await('SELECT * FROM admin_roles ORDER BY id ASC', {})
+        TriggerClientEvent('fluvia:tablet:receiveRoles', src, roles or {})
     else
         TriggerClientEvent('fluvia:notify', src, 'error', 'Ce nom de rôle existe déjà.')
     end

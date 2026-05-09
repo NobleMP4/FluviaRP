@@ -18,7 +18,7 @@ function ToggleMenu()
         -- IMPORTANT : false sur le 2e paramètre = clavier toujours actif → joueur bouge
         SetNuiFocus(true, false)
         -- Rafraîchir la liste des joueurs à l'ouverture
-        TriggerNetEvent('fluvia:admin:requestPlayerList')
+        TriggerServerEvent('fluvia:admin:requestPlayerList')
     else
         SendNUIMessage({ action = 'close' })
         SetNuiFocus(false, false)
@@ -35,7 +35,7 @@ end)
 
 -- ── NUI : liste des joueurs ───────────────────────────────────────────────────
 RegisterNUICallback('requestPlayerList', function(data, cb)
-    TriggerNetEvent('fluvia:admin:requestPlayerList')
+    TriggerServerEvent('fluvia:admin:requestPlayerList')
     cb({ ok = true })
 end)
 
@@ -45,32 +45,32 @@ end)
 
 -- ── NUI : actions sur un joueur ────────────────────────────────────────────────
 RegisterNUICallback('kickPlayer', function(data, cb)
-    TriggerNetEvent('fluvia:admin:kick', data.source, data.reason)
+    TriggerServerEvent('fluvia:admin:kick', data.source, data.reason)
     cb({ ok = true })
 end)
 
 RegisterNUICallback('banPlayer', function(data, cb)
-    TriggerNetEvent('fluvia:admin:ban', data.source, data.reason, data.duration)
+    TriggerServerEvent('fluvia:admin:ban', data.source, data.reason, data.duration)
     cb({ ok = true })
 end)
 
 RegisterNUICallback('teleportToPlayer', function(data, cb)
-    TriggerNetEvent('fluvia:admin:teleportToPlayer', data.source)
+    TriggerServerEvent('fluvia:admin:teleportToPlayer', data.source)
     cb({ ok = true })
 end)
 
 RegisterNUICallback('teleportPlayerToMe', function(data, cb)
-    TriggerNetEvent('fluvia:admin:teleportPlayerToMe', data.source)
+    TriggerServerEvent('fluvia:admin:teleportPlayerToMe', data.source)
     cb({ ok = true })
 end)
 
 RegisterNUICallback('setPlayerGod', function(data, cb)
-    TriggerNetEvent('fluvia:admin:setPlayerGod', data.source, data.state)
+    TriggerServerEvent('fluvia:admin:setPlayerGod', data.source, data.state)
     cb({ ok = true })
 end)
 
 RegisterNUICallback('giveVehicleKey', function(data, cb)
-    TriggerNetEvent('fluvia:admin:giveVehicleKey', data.source, data.plate)
+    TriggerServerEvent('fluvia:admin:giveVehicleKey', data.source, data.plate)
     cb({ ok = true })
 end)
 
@@ -114,7 +114,7 @@ RegisterNUICallback('teleportToWaypoint', function(data, cb)
 end)
 
 RegisterNUICallback('spawnVehicle', function(data, cb)
-    TriggerNetEvent('fluvia:admin:spawnVehicle', data.model)
+    TriggerServerEvent('fluvia:admin:spawnVehicle', data.model)
     cb({ ok = true })
 end)
 

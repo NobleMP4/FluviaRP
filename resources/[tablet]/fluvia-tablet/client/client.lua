@@ -42,7 +42,7 @@ end)
 
 -- ── NUI : Rôles ───────────────────────────────────────────────────────────────
 RegisterNUICallback('getRoles', function(data, cb)
-    TriggerNetEvent('fluvia:tablet:getRoles')
+    TriggerServerEvent('fluvia:tablet:getRoles')
     cb({ ok = true })
 end)
 
@@ -51,33 +51,33 @@ RegisterNetEvent('fluvia:tablet:receiveRoles', function(roles)
 end)
 
 RegisterNUICallback('createRole', function(data, cb)
-    TriggerNetEvent('fluvia:tablet:createRole', data)
+    TriggerServerEvent('fluvia:tablet:createRole', data)
     cb({ ok = true })
 end)
 
 RegisterNUICallback('updateRole', function(data, cb)
-    TriggerNetEvent('fluvia:tablet:updateRole', data.id, data)
+    TriggerServerEvent('fluvia:tablet:updateRole', data.id, data)
     cb({ ok = true })
 end)
 
 RegisterNUICallback('deleteRole', function(data, cb)
-    TriggerNetEvent('fluvia:tablet:deleteRole', data.id)
+    TriggerServerEvent('fluvia:tablet:deleteRole', data.id)
     cb({ ok = true })
 end)
 
 RegisterNUICallback('assignRole', function(data, cb)
-    TriggerNetEvent('fluvia:tablet:assignRole', data.identifier, data.roleId)
+    TriggerServerEvent('fluvia:tablet:assignRole', data.identifier, data.roleId)
     cb({ ok = true })
 end)
 
 RegisterNUICallback('removeRole', function(data, cb)
-    TriggerNetEvent('fluvia:tablet:removeRole', data.identifier, data.roleId)
+    TriggerServerEvent('fluvia:tablet:removeRole', data.identifier, data.roleId)
     cb({ ok = true })
 end)
 
 -- ── NUI : Factions ────────────────────────────────────────────────────────────
 RegisterNUICallback('getFactions', function(data, cb)
-    TriggerNetEvent('fluvia:tablet:getFactions')
+    TriggerServerEvent('fluvia:tablet:getFactions')
     cb({ ok = true })
 end)
 
@@ -86,23 +86,23 @@ RegisterNetEvent('fluvia:tablet:receiveFactions', function(factions)
 end)
 
 RegisterNUICallback('createFaction', function(data, cb)
-    TriggerNetEvent('fluvia:tablet:createFaction', data)
+    TriggerServerEvent('fluvia:tablet:createFaction', data)
     cb({ ok = true })
 end)
 
 RegisterNUICallback('updateFaction', function(data, cb)
-    TriggerNetEvent('fluvia:tablet:updateFaction', data.id, data)
+    TriggerServerEvent('fluvia:tablet:updateFaction', data.id, data)
     cb({ ok = true })
 end)
 
 RegisterNUICallback('deleteFaction', function(data, cb)
-    TriggerNetEvent('fluvia:tablet:deleteFaction', data.id)
+    TriggerServerEvent('fluvia:tablet:deleteFaction', data.id)
     cb({ ok = true })
 end)
 
 -- Grades
 RegisterNUICallback('getFactionGrades', function(data, cb)
-    TriggerNetEvent('fluvia:tablet:getFactionGrades', data.factionId)
+    TriggerServerEvent('fluvia:tablet:getFactionGrades', data.factionId)
     cb({ ok = true })
 end)
 
@@ -111,13 +111,13 @@ RegisterNetEvent('fluvia:tablet:receiveFactionGrades', function(grades)
 end)
 
 RegisterNUICallback('addGrade', function(data, cb)
-    TriggerNetEvent('fluvia:tablet:addGrade', data.factionId, data.label, data.isBoss)
+    TriggerServerEvent('fluvia:tablet:addGrade', data.factionId, data.label, data.isBoss)
     cb({ ok = true })
 end)
 
 -- Outfits
 RegisterNUICallback('getFactionOutfits', function(data, cb)
-    TriggerNetEvent('fluvia:tablet:getFactionOutfits', data.factionId)
+    TriggerServerEvent('fluvia:tablet:getFactionOutfits', data.factionId)
     cb({ ok = true })
 end)
 
@@ -146,7 +146,7 @@ RegisterNUICallback('captureAndSaveOutfit', function(data, cb)
         }
     end
 
-    TriggerNetEvent('fluvia:tablet:saveOutfit',
+    TriggerServerEvent('fluvia:tablet:saveOutfit',
         data.factionId,
         data.gradeId,
         data.label,
@@ -158,7 +158,7 @@ end)
 
 -- Points de service
 RegisterNUICallback('getFactionServicePoints', function(data, cb)
-    TriggerNetEvent('fluvia:tablet:getFactionServicePoints', data.factionId)
+    TriggerServerEvent('fluvia:tablet:getFactionServicePoints', data.factionId)
     cb({ ok = true })
 end)
 
@@ -172,7 +172,7 @@ RegisterNUICallback('placeServicePoint', function(data, cb)
     local pos     = GetEntityCoords(ped)
     local heading = GetEntityHeading(ped)
 
-    TriggerNetEvent('fluvia:tablet:createServicePoint', data.factionId, data.label, {
+    TriggerServerEvent('fluvia:tablet:createServicePoint', data.factionId, data.label, {
         x = pos.x,
         y = pos.y,
         z = pos.z,
@@ -182,7 +182,7 @@ RegisterNUICallback('placeServicePoint', function(data, cb)
 end)
 
 RegisterNUICallback('deleteServicePoint', function(data, cb)
-    TriggerNetEvent('fluvia:tablet:deleteServicePoint', data.id)
+    TriggerServerEvent('fluvia:tablet:deleteServicePoint', data.id)
     cb({ ok = true })
 end)
 
