@@ -4,6 +4,15 @@
 local localCharacter = nil
 local isLoaded       = false
 
+-- Initialise la session FiveM (remplace sessionmanager)
+CreateThread(function()
+    while not NetworkIsSessionStarted() do
+        Wait(0)
+    end
+    TriggerEvent('sessionInitialized')
+    TriggerServerEvent('fluvia:core:playerActivated')
+end)
+
 -- Reçu depuis fluvia-character après qu'un personnage est chargé
 AddEventHandler('fluvia:characterLoaded', function(charData)
     isLoaded       = true
