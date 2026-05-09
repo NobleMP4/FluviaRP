@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: transparent;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-start;
+      padding: 0 0 60px 40px;
+      pointer-events: none;
+    }
+
+    #chat-container {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      width: 480px;
+      pointer-events: all;
+    }
+
+    #chat-container.visible { display: flex; }
+
+    /* ── Liste de commandes ── */
+    #cmd-list {
+      background: rgba(13, 15, 20, 0.92);
+      border: 1px solid rgba(79, 142, 247, 0.25);
+      border-radius: 10px;
+      padding: 10px 8px;
+      max-height: 260px;
+      overflow-y: auto;
+    }
+
+    #cmd-list::-webkit-scrollbar { width: 3px; }
+    #cmd-list::-webkit-scrollbar-thumb { background: rgba(79,142,247,0.4); border-radius: 2px; }
+
+    .cmd-header {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(100, 116, 139, 0.9);
+      padding: 0 8px 6px;
+      border-bottom: 1px solid rgba(42, 51, 71, 0.8);
+      margin-bottom: 4px;
+    }
+
+    .cmd-item {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      padding: 5px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .cmd-item:hover { background: rgba(79, 142, 247, 0.1); }
+
+    .cmd-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: #4f8ef7;
+      min-width: 120px;
+    }
+
+    .cmd-desc {
+      font-size: 11px;
+      color: rgba(226, 232, 240, 0.6);
+    }
+
+    /* ── Zone de saisie ── */
+    #input-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    #cmd-input {
+      flex: 1;
+      padding: 10px 14px;
+      background: rgba(13, 15, 20, 0.95);
+      border: 1px solid rgba(79, 142, 247, 0.4);
+      border-radius: 8px;
+      color: #e2e8f0;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+    }
+
+    #cmd-input:focus { border-color: #4f8ef7; }
+    #cmd-input::placeholder { color: rgba(100, 116, 139, 0.8); }
+
+    #send-btn {
+      padding: 10px 14px;
+      background: #4f8ef7;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    #send-btn:hover { background: #6aa3ff; }
+  </style>
+</head>
+<body>
+  <div id="chat-container">
+    <div id="cmd-list">
+      <div class="cmd-header">Commandes disponibles</div>
+      <div id="cmd-items"></div>
+    </div>
+    <div id="input-row">
+      <input id="cmd-input" type="text" placeholder="Tapez une commande… ex: /me sourit" autofocus />
+      <button id="send-btn">Envoyer</button>
+    </div>
+  </div>
+
+  <script>
+    const container = document.getElementById('chat-container')
+    const input     = document.getElementById('cmd-input')
+    const itemsEl   = document.getElementById('cmd-items')
+    const sendBtn   = document.getElementById('send-btn')
+
+    function send(action, data = {}) {
+      fetch(`https://${GetParentResourceName()}/${action}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+    }
+
+    function close() {
+      container.classList.remove('visible')
+      input.value = ''
+      send('close')
+    }
+
+    function execute() {
+      const val = input.value.trim()
+      if (!val) { close(); return }
+      send('execute', { input: val })
+      container.classList.remove('visible')
+      input.value = ''
+    }
+
+    // Clic sur une commande → pré-remplir l'input
+    function buildList(commands) {
+      itemsEl.innerHTML = ''
+      commands.forEach(c => {
+        const div = document.createElement('div')
+        div.className = 'cmd-item'
+        div.innerHTML = `<span class="cmd-name">${c.cmd}</span><span class="cmd-desc">${c.desc}</span>`
+        div.addEventListener('click', () => {
+          input.value = c.cmd + ' '
+          input.focus()
+        })
+        itemsEl.appendChild(div)
+      })
+    }
+
+    // Filtrer la liste selon ce que l'utilisateur tape
+    input.addEventListener('input', () => {
+      const q = input.value.toLowerCase()
+      document.querySelectorAll('.cmd-item').forEach(el => {
+        const name = el.querySelector('.cmd-name').textContent.toLowerCase()
+        el.style.display = name.includes(q) ? '' : 'none'
+      })
+    })
+
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') execute()
+      if (e.key === 'Escape') close()
+    })
+
+    sendBtn.addEventListener('click', execute)
+
+    // Messages NUI depuis le client Lua
+    window.addEventListener('message', e => {
+      if (e.data.action === 'open') {
+        buildList(e.data.commands || [])
+        container.classList.add('visible')
+        input.value = ''
+        input.focus()
+      }
+    })
+
+    function GetParentResourceName() {
+      return window.GetParentResourceName?.() ?? 'fluvia-chat'
+    }
+  </script>
+</body>
+</html>

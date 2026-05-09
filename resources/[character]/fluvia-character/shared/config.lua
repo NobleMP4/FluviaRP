@@ -3,13 +3,14 @@ Config = {}
 Config.MaxSlots = 3
 
 -- Position de la caméra pour la sélection/création de personnage
+-- Caméra placée devant le ped (2.5 m dans la direction où il fait face)
 Config.CreatorCam = {
-    pos     = { x = -263.8, y = -956.0, z = 33.5 },
-    rot     = { x = 0.0,    y = 0.0,    z = 160.0 },
-    fov     = 55.0,
+    pos = { x = -264.6, y = -957.4, z = 31.9 },
+    rot = { x = -5.0,   y = 0.0,    z = 340.0 },
+    fov = 45.0,
 }
 
--- Position du ped de prévisualisation
+-- Position du ped de prévisualisation (heading 160 = le ped fait face vers la caméra)
 Config.CreatorPedPos = { x = -265.5, y = -955.0, z = 31.2, h = 160.0 }
 
 -- Spawn par défaut pour un nouveau personnage

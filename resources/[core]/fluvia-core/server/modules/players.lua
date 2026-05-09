@@ -13,8 +13,10 @@ local function NewPlayer(src, identifier, playerId)
         permissions = {},  -- nodes de permission mis en cache pour cette session
     }
 
-    -- Vérifie si le joueur possède un node de permission
+    -- Vérifie si le joueur possède un node de permission.
+    -- Les admins txAdmin (group.admin) ont toutes les permissions automatiquement.
     function self:HasPermission(node)
+        if IsPlayerAceAllowed(tostring(self.source), 'command') then return true end
         if self.permissions[Config.SuperadminWildcard] then return true end
         return self.permissions[node] == true
     end
