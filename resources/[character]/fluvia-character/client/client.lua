@@ -14,12 +14,15 @@ end)
 
 -- ── Réception des slots → ouverture du NUI de sélection ─────────────────────
 RegisterNetEvent('fluvia:character:receiveSlots', function(slots)
-    SetNuiFocus(true, true)
-    FreezeEntityPosition(PlayerPedId(), true)
-    DisplayHud(false)
-    DisplayRadar(false)
-    OpenSelectionCamera()
-    SendNUIMessage({ action = 'openCharacterSelect', slots = slots, maxSlots = Config.MaxSlots })
+    exports.spawnmanager:setAutoSpawn(false)
+    exports.spawnmanager:spawnPlayer({ x = 0.0, y = 0.0, z = 72.0, model = 'mp_m_freemode_01' }, function()
+        SetNuiFocus(true, true)
+        FreezeEntityPosition(PlayerPedId(), true)
+        DisplayHud(false)
+        DisplayRadar(false)
+        OpenSelectionCamera()
+        SendNUIMessage({ action = 'openCharacterSelect', slots = slots, maxSlots = Config.MaxSlots })
+    end)
 end)
 
 -- ── NUI Callbacks ─────────────────────────────────────────────────────────────
@@ -78,14 +81,11 @@ end)
 
 -- ── Serveur → spawn du personnage ────────────────────────────────────────────
 RegisterNetEvent('fluvia:character:spawn', function(charData)
-    -- Fermer le NUI
+    -- Fermer le NUI et la caméra
     SetNuiFocus(false, false)
-    FreezeEntityPosition(PlayerPedId(), false)
     DisplayHud(true)
     DisplayRadar(true)
     SendNUIMessage({ action = 'closeAll' })
-
-    -- Fermer la caméra de sélection
     CloseSelectionCamera()
 
     -- Supprimer le ped de prévisualisation si présent
@@ -94,15 +94,17 @@ RegisterNetEvent('fluvia:character:spawn', function(charData)
         creationPed = nil
     end
 
-    -- Téléporter le joueur à sa position sauvegardée
     local pos = charData.position
     local ped = PlayerPedId()
+
+    -- Téléporter et dégeler
     SetEntityCoords(ped, pos.x, pos.y, pos.z, false, false, false, false)
+    FreezeEntityPosition(ped, false)
 
     -- Appliquer l'apparence
     ApplyAppearanceToPed(ped, charData.appearance)
 
-    -- Informer les autres ressources (y compris le serveur)
+    -- Informer les autres ressources
     TriggerEvent('fluvia:characterLoaded', charData)
     TriggerServerEvent('fluvia:characterLoaded', charData)
     TriggerEvent('fluvia:notify', 'success', 'Bienvenue ' .. charData.firstName .. ' ' .. charData.lastName .. ' !')
