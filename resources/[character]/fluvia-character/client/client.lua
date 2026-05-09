@@ -48,6 +48,11 @@ RegisterNUICallback('openCreator', function(data, cb)
     isInCreator = true
     local gender = data.gender or 0
     SpawnCreatorPed(gender)
+    -- Pointer la caméra vers le ped de prévisualisation
+    if camHandle then
+        local cp = Config.CreatorPedPos
+        PointCamAtCoord(camHandle, cp.x, cp.y, cp.z + 0.7)
+    end
     SendNUIMessage({ action = 'openCreator', slot = data.slot, nationalities = Config.Nationalities })
     cb({ ok = true })
 end)
@@ -63,6 +68,10 @@ end)
 -- Changement de genre dans le créateur (respawn le ped)
 RegisterNUICallback('changeGender', function(data, cb)
     SpawnCreatorPed(data.gender or 0)
+    if camHandle then
+        local cp = Config.CreatorPedPos
+        PointCamAtCoord(camHandle, cp.x, cp.y, cp.z + 0.7)
+    end
     cb({ ok = true })
 end)
 

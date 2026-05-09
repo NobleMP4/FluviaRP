@@ -15,9 +15,7 @@ function ToggleMenu()
 
     if isMenuOpen then
         SendNUIMessage({ action = 'open' })
-        -- IMPORTANT : false sur le 2e paramètre = clavier toujours actif → joueur bouge
-        SetNuiFocus(true, false)
-        -- Rafraîchir la liste des joueurs à l'ouverture
+        SetNuiFocus(true, true)
         TriggerServerEvent('fluvia:admin:requestPlayerList')
     else
         SendNUIMessage({ action = 'close' })
