@@ -58,6 +58,16 @@ exports('GetPlayer', function(src)
     return Players.Get(tonumber(src))
 end)
 
+-- Récupère ou enregistre le joueur (utile si playerDropped a nettoyé trop tôt)
+exports('EnsurePlayer', function(src)
+    src = tonumber(src)
+    local p = Players.Get(src)
+    if not p then
+        p = Players.Register(src)
+    end
+    return p
+end)
+
 exports('GetAllPlayers', function()
     return Players.GetAll()
 end)

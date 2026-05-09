@@ -23,6 +23,7 @@ client_scripts {
 
 server_exports {
     'GetPlayer',
+    'EnsurePlayer',
     'GetAllPlayers',
     'GetPlayerByIdentifier',
     'HasPermission',

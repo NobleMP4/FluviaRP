@@ -17,11 +17,9 @@ end
 -- ── Récupère les slots de personnage ─────────────────────────────────────────
 RegisterNetEvent('fluvia:character:fetchSlots', function()
     local src = source
-    print('[DEBUG] fetchSlots reçu de src=' .. tostring(src))
-    local p   = exports['fluvia-core']:GetPlayer(src)
-    print('[DEBUG] GetPlayer retourne: ' .. tostring(p))
+    local p   = exports['fluvia-core']:EnsurePlayer(src)
     if not p then
-        print('[DEBUG] ERREUR: joueur introuvable pour src=' .. tostring(src))
+        print('[FluviaRP Character] ERREUR: impossible d\'enregistrer le joueur src=' .. tostring(src))
         return
     end
 
