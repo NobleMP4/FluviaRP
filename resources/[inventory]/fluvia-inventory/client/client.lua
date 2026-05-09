@@ -30,9 +30,7 @@ CreateThread(function()
         local ped    = PlayerPedId()
         local coords = GetEntityCoords(ped)
 
-        local vehicles = {}
-        local veh = GetFirstVehicle()
-        while veh ~= 0 do
+        for _, veh in ipairs(GetGamePool('CVehicle')) do
             local vehCoords = GetEntityCoords(veh)
             local dist = #(coords - vehCoords)
             if dist < 5.0 then
@@ -42,7 +40,6 @@ CreateThread(function()
                     -- Note : la gestion complète du verrouillage sera dans un module dédié
                 end
             end
-            veh = GetNextVehicle(veh)
         end
     end
 end)

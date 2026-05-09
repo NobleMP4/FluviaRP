@@ -215,7 +215,7 @@ end
 
 -- Reçu du serveur : recharger les blips
 RegisterNetEvent('fluvia:factions:refreshBlips', function()
-    TriggerNetEvent('fluvia:factions:requestBlips')
+    TriggerServerEvent('fluvia:factions:requestBlips')
 end)
 
 RegisterNetEvent('fluvia:factions:receiveBlips', function(sps)
@@ -226,10 +226,10 @@ end)
 AddEventHandler('onClientResourceStart', function(res)
     if res ~= GetCurrentResourceName() then return end
     Wait(3000)
-    TriggerNetEvent('fluvia:factions:requestBlips')
+    TriggerServerEvent('fluvia:factions:requestBlips')
 end)
 
 -- Charger les blips quand le personnage est chargé
 AddEventHandler('fluvia:characterLoaded', function()
-    TriggerNetEvent('fluvia:factions:requestBlips')
+    TriggerServerEvent('fluvia:factions:requestBlips')
 end)

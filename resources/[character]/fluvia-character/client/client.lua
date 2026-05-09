@@ -9,7 +9,7 @@ AddEventHandler('onClientResourceStart', function(res)
     if res ~= GetCurrentResourceName() then return end
     -- Attendre que le core ait enregistré le joueur
     Wait(2000)
-    TriggerNetEvent('fluvia:character:fetchSlots')
+    TriggerServerEvent('fluvia:character:fetchSlots')
 end)
 
 -- ── Réception des slots → ouverture du NUI de sélection ─────────────────────
@@ -66,7 +66,7 @@ RegisterNUICallback('cancelCreator', function(data, cb)
         DeleteEntity(creationPed)
         creationPed = nil
     end
-    TriggerNetEvent('fluvia:character:fetchSlots')
+    TriggerServerEvent('fluvia:character:fetchSlots')
     cb({ ok = true })
 end)
 
